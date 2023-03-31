@@ -1,4 +1,4 @@
-# Srpingboot / vue
+# Srpingboot / Vue
 
 ## Project setup
 ```
