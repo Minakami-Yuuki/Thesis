@@ -1,0 +1,140 @@
+* {
+    margin: 0;
+    padding: 0;
+}
+
+.ml-5 {
+    margin-left: 5px;
+}
+
+.ml-10 {
+    margin-left: 10px;
+}
+
+.mr-5 {
+    margin-right: 5px;
+}
+
+/* 内容不换行 */
+.item-codes {
+    white-space: nowrap;
+}
+
+/* 毛玻璃 */
+.class{
+    background: rgba(255, 255, 255, 0.2);
+    -webkit-backdrop-filter: blur(8px);
+    backdrop-filter: blur(3px);
+    border-radius: 25px;
+    box-shadow:inset 0 0 6px rgba(255, 255, 255, 0.2);
+}
+
+/* 后台注册登录背景样式 */
+.wrapper-back {
+    height: 100vh;
+    /*background-image: linear-gradient(to bottom left, #FC466B, #3F5EFB);*/
+    background-image: url("~@/assets/backLogin.jpg");
+    background-size: cover;
+    background-position: center;
+    overflow: hidden;
+}
+
+/* 前台注册登录背景样式 */
+.wrapper-front {
+    height: 100vh;
+    /*background-image: linear-gradient(to bottom left, #FC466B, #3F5EFB);*/
+    background-image: url("~@/assets/frontLogin2.GIF");
+    background-size: cover;
+    background-position: center;
+    overflow: hidden;
+}
+
+/* 头像样式 */
+.avatar-uploader-personInfo {
+    text-align: left;
+    margin-right: 50px;
+    padding-bottom: 20px;
+}
+
+.avatar-uploader-changePassword {
+    text-align: center;
+    padding-bottom: 20px;
+}
+
+.avatar-uploader .el-upload {
+    border: 1px dashed #d9d9d9;
+    border-radius: 6px;
+    cursor: pointer;
+    position: relative;
+    overflow: hidden;
+}
+.avatar-uploader .el-upload:hover {
+    border-color: #409EFF;
+}
+.avatar-uploader-icon {
+    font-size: 28px;
+    color: #8c939d;
+    width: 178px;
+    height: 178px;
+    line-height: 178px;
+    text-align: center;
+}
+.avatar {
+    width: 158px;
+    height: 158px;
+    display: block;
+}
+
+.avatarSchool {
+    width: 128px;
+    height: 128px;
+    display: block;
+}
+
+.avatarSchool-bg {
+    width: 88px;
+    height: 88px;
+    display: block;
+}
+
+.mid{
+    display:flex;
+    justify-content: center;
+    align-items: center;
+    margin: auto;
+}
+
+.el-button--goon.is-active,
+.el-button--goon:active {
+    background: #20B2AA;
+    border-color: #20B2AA;
+    color: #fff;
+}
+
+.el-button--goon:focus,
+.el-button--goon:hover {
+    background: #48D1CC;
+    border-color: #48D1CC;
+    color: #fff;
+}
+
+.el-button--goon {
+    color: #FFF;
+    background-color: #20B2AA;
+    border-color: #20B2AA;
+}
+
+.divider-red {
+    background-color: #FF0000;
+    height: 2px;
+}
+.divider-yellow {
+    background-color: #FFFF00;
+    height: 2px;
+}
+.divider-blue {
+    background-color: #00BBFF;
+    height: 2px;
+}
+
+
