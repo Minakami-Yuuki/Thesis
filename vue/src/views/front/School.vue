@@ -116,37 +116,12 @@ export default {
   created() {
     // 刷新页面
     let detailFrom = this.$route.query
-    console.log(detailFrom)
+    // console.log(detailFrom)
     if (detailFrom === null) {
       this.load()
     }
     else {
-      this.request.get("/school/pageSpecialty", {
-        params: {
-          pageNum: this.pageNum,
-          pageSize: this.pageSize,
-          specialty: detailFrom.specialtyName
-        }
-      }).then(res => {
-        console.log(res.data)
-        this.tableData = res.data.records
-        for (let i = 0; i < res.data.records.length; i++) {
-          if (res.data.records[i].classFlag === 3) {
-            res.data.records[i].classFlag = 985
-          }
-          else if (res.data.records[i].classFlag === 2) {
-            res.data.records[i].classFlag = 211
-          }
-          else if (res.data.records[i].classFlag === 1) {
-            res.data.records[i].classFlag = '双一流'
-          }
-          else {
-            res.data.records[i].classFlag = '普通本科'
-          }
-        }
-        this.total = res.data.total
-        this.button = 1
-      })
+      this.handleSpecialty()
     }
   },
   methods: {
@@ -201,13 +176,23 @@ export default {
       console.log(pageSize)
       this.pageSize = pageSize
       this.button = 0
-      this.load()
+      if (this.specialtyName !== "") {
+        this.handleSpecialty()
+      }
+      else {
+        this.load()
+      }
     },
     handleCurrentChange(pageNum) {
       console.log(pageNum)
       this.pageNum = pageNum
       this.button = 0
-      this.load()
+      if (this.specialtyName !== "") {
+        this.handleSpecialty()
+      }
+      else {
+        this.load()
+      }
     },
     // 批量删除按钮
     handleSelectionChange(val) {
@@ -216,36 +201,73 @@ export default {
     },
     // 查询院校地区
     handleSearch(val) {
-      this.request.get("/school/pageSchool", {
+      let temp = []
+      let tempAll = JSON.parse(localStorage.getItem("tempAll"))
+      // 专业跳转院校查询
+      if (this.specialtyName !== "") {
+        console.log(this.tableData)
+        if (this.form.province === "全部" && this.classMap[this.form.schoolClass] === "") {
+          this.tableData = tempAll
+          this.switchClassFlag()
+        }
+        else {
+          if (this.form.province === "全部") {
+            for (let i = 0; i < tempAll.length; i++) {
+              if (tempAll[i].classFlag === this.classMap[this.form.schoolClass]) {
+                temp.push(tempAll[i])
+              }
+            }
+          }
+          else if (this.classMap[this.form.schoolClass] === "") {
+            for (let i = 0; i < tempAll.length; i++) {
+              if (tempAll[i].province === this.form.province) {
+                temp.push(tempAll[i])
+              }
+            }
+          }
+          this.tableData = temp
+          this.total = temp.length
+          this.switchClassFlag()
+        }
+      }
+      // 院校查询
+      else {
+        this.request.get("/school/pageSchool", {
+          params: {
+            pageNum: this.pageNum,
+            pageSize: this.pageSize,
+            province: this.form.province,
+            classFlag: this.classMap[this.form.schoolClass]
+          }
+        }).then(res => {
+          // Token 不合法
+          // if (res.code === '402') {
+          //   this.$router.push("/login")
+          //   return false
+          // }
+          console.log(val)
+          this.tableData = res.data.records
+          this.total = res.data.total
+          this.switchClassFlag()
+        })
+      }
+    },
+    // 专业查询跳转
+    handleSpecialty() {
+      let detailFrom = this.$route.query
+      this.request.get("/school/pageSpecialty", {
         params: {
           pageNum: this.pageNum,
           pageSize: this.pageSize,
-          province: this.form.province,
-          classFlag: this.classMap[this.form.schoolClass]
+          specialty: detailFrom.specialtyName
         }
       }).then(res => {
-        // Token 不合法
-        // if (res.code === '402') {
-        //   this.$router.push("/login")
-        //   return false
-        // }
-        console.log(val)
+        console.log(res.data)
         this.tableData = res.data.records
+        localStorage.setItem("tempAll", JSON.stringify(this.tableData))
+        this.switchClassFlag()
         this.total = res.data.total
-        for (let i = 0; i < res.data.records.length; i++) {
-          if (res.data.records[i].classFlag === 3) {
-            res.data.records[i].classFlag = 985
-          }
-          else if (res.data.records[i].classFlag === 2) {
-            res.data.records[i].classFlag = 211
-          }
-          else if (res.data.records[i].classFlag === 1) {
-            res.data.records[i].classFlag = '双一流'
-          }
-          else {
-            res.data.records[i].classFlag = '普通本科'
-          }
-        }
+        this.button = 1
       })
     },
     // 收藏操作
@@ -297,6 +319,22 @@ export default {
           detailAvatar: row.avatar,
         }
       })
+    },
+    switchClassFlag() {
+      for (let i = 0; i < this.tableData.length; i++) {
+        if (this.tableData[i].classFlag === 3 || this.tableData[i].classFlag === 985) {
+          this.tableData[i].classFlag = 985
+        }
+        else if (this.tableData[i].classFlag === 2 || this.tableData[i].classFlag === 211) {
+          this.tableData[i].classFlag = 211
+        }
+        else if (this.tableData[i].classFlag === 1 || this.tableData[i].classFlag === '双一流') {
+          this.tableData[i].classFlag = '双一流'
+        }
+        else {
+          this.tableData[i].classFlag = '普通本科'
+        }
+      }
     }
   }
 }

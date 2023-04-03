@@ -43,6 +43,9 @@ export default {
   created() {
     if (localStorage.getItem("user")) {
       this.$router.push("/home")
+      localStorage.removeItem("report")
+      localStorage.removeItem("score")
+      localStorage.removeItem("tempAll")
     }
   },
   data() {

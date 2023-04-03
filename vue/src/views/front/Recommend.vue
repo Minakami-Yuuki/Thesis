@@ -96,27 +96,58 @@ export default {
     }
   },
   created() {
-    for (let i = 0; i < this.application.length; i++) {
-      if (this.application[i].classFlag === 3) {
-        this.application[i].classFlag = 985
-      }
-      else if (this.application[i].classFlag === 2) {
-        this.application[i].classFlag = 211
-      }
-      else if (this.application[i].classFlag === 1) {
-        this.application[i].classFlag = '双一流'
-      }
-      else {
-        this.application[i].classFlag = '普通本科'
-      }
-    }
+    this.init()
+    this.switchClassFlag()
   },
   methods: {
+    // 初始化
+    init() {
+      this.request.get("/application/pageName", {
+        params: {
+          pageNum: this.pageNum,
+          pageSize: this.pageSize,
+          name: JSON.parse(localStorage.getItem("stdUser")) ? JSON.parse(localStorage.getItem("stdUser")).username : JSON.parse(localStorage.getItem("user")).username,
+        }
+      }).then(res => {
+        // console.log(res)
+        this.form.score = res.data.records[0].score
+        let a = []
+        a[0] = res.data.records[0].application1
+        a[1] = res.data.records[0].application2
+        a[2] = res.data.records[0].application3
+        a[3] = res.data.records[0].application4
+        a[4] = res.data.records[0].application5
+
+        const localTemp = []
+        for (let i = 0; i < a.length; i++) {
+          if (a[i] === null) {
+            break
+          }
+          this.request.get("/school/pageName", {
+            params: {
+              pageNum: this.pageNum,
+              pageSize: this.pageSize,
+              name: a[i],
+            }
+          }).then(res2 => {
+            // console.log(res2)
+            localTemp.push(res2.data.records[0])
+          })
+        }
+        setTimeout(() => {
+          // console.log(localTemp)
+          if (localStorage.getItem("application")) {}
+          else {
+            localStorage.setItem("application", JSON.stringify(localTemp))
+          }
+        }, 1000);
+      })
+    },
     // 重置搜索
     reset() {
       this.form.score = undefined
       localStorage.removeItem("application")
-      location.reload()
+      // location.reload()
       this.$message({
         duration: 200,
         message: "重置成功!",
@@ -310,6 +341,22 @@ export default {
         })
       }
     },
+    switchClassFlag() {
+      for (let i = 0; i < this.application.length; i++) {
+        if (this.application[i].classFlag === 3 || this.application[i].classFlag === 985) {
+          this.application[i].classFlag = 985
+        }
+        else if (this.application[i].classFlag === 2 || this.application[i].classFlag === 211) {
+          this.application[i].classFlag = 211
+        }
+        else if (this.application[i].classFlag === 1 || this.application[i].classFlag === '双一流') {
+          this.application[i].classFlag = '双一流'
+        }
+        else {
+          this.application[i].classFlag = '普通本科'
+        }
+      }
+    }
   }
 }
 </script>

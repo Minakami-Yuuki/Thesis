@@ -96,6 +96,8 @@ export default {
     // 重置搜索
     reset() {
       this.$router.push("/front/recommend")
+      localStorage.removeItem("report")
+      localStorage.removeItem("score")
     },
     // 存取分页大小
     handleSizeChange(pageSize) {

@@ -2,7 +2,7 @@
   <div>
 <!--  头部  -->
     <div style="display: flex; height: 60px; line-height: 60px; border-bottom: 1px solid #eee">
-      <div style="width: 300px; display: flex; padding-left: 30px">
+      <div style="width: 300px; display: flex; padding-left: 30px;">
         <div style="width: 60px">
           <img src="../../assets/SG.jpg" alt="" style="width: 30px; position: relative; top: 5px; right: 0">
         </div>
@@ -218,11 +218,19 @@ export default {
             // 将表单值传入后端
             this.request.post("/stdUser", this.form).then(res => {
               if (res.code === '200') {
-                this.$message.success("修改成功!")
+                this.$message({
+                  duration: 800,
+                  message: "修改成功!",
+                  type: "success"
+                })
                 // 关闭弹窗
                 this.dialogInfoFormVisible = false
               } else {
-                this.$message.error("修改失败!")
+                this.$message({
+                  duration: 1200,
+                  message: "修改失败!",
+                  type: "error"
+                })
               }
             })
           }

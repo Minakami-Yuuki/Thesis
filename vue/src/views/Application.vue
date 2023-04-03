@@ -36,7 +36,7 @@
         </template>
       </el-table-column>
       <el-table-column prop="name" label="用户名称"></el-table-column>
-      <el-table-column prop="score" label="报考分数"></el-table-column>
+      <el-table-column prop="score" label="填报分数"></el-table-column>
       <el-table-column prop="application1" label="院校志愿1"></el-table-column>
       <el-table-column prop="application2" label="院校志愿2"></el-table-column>
       <el-table-column prop="application3" label="院校志愿3"></el-table-column>
@@ -78,7 +78,7 @@
         <el-form-item label="用户名称">
           <el-input v-model="form.name" autocomplete="off"></el-input>
         </el-form-item>
-        <el-form-item label="报考分数">
+        <el-form-item label="填报分数">
           <el-input v-model="form.score" autocomplete="off"></el-input>
         </el-form-item>
         <el-form-item label="院校志愿 Ⅰ">
@@ -108,7 +108,7 @@
       <el-form-item label="用户名称">
         <el-input v-model="form.name" autocomplete="off"></el-input>
       </el-form-item>
-      <el-form-item label="报考分数">
+      <el-form-item label="填报分数">
         <el-input v-model="form.score" autocomplete="off"></el-input>
       </el-form-item>
       <el-form-item label="院校志愿 Ⅰ">
