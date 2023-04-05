@@ -75,7 +75,7 @@ export default {
   },
   created() {
     let detailForm = this.$route.query
-    if (detailForm.recommendDetails) {
+    if (detailForm.recommendDetails && !(localStorage.getItem("report"))) {
       this.score = detailForm.score
       localStorage.setItem("score", JSON.stringify(detailForm.score))
       for (let i = 0; i < detailForm.recommendDetails.length; i++) {
@@ -95,9 +95,18 @@ export default {
   methods: {
     // 重置搜索
     reset() {
-      this.$router.push("/front/recommend")
-      localStorage.removeItem("report")
-      localStorage.removeItem("score")
+      if (!(localStorage.getItem("stdUser") || localStorage.getItem("user"))) {
+        this.$message({
+          duration: 1200,
+          message: "请进行用户登录!",
+          type: "error"
+        })
+      }
+      else {
+        this.$router.push("/front/recommend")
+        localStorage.removeItem("report")
+        localStorage.removeItem("score")
+      }
     },
     // 存取分页大小
     handleSizeChange(pageSize) {

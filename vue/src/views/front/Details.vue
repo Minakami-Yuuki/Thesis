@@ -159,7 +159,7 @@ export default {
     let scaleBar = echarts.init(document.getElementById('scale-bar'));
     roundLife.setOption({
       title: {
-        text: '4.5',
+        text: (Math.random() * (4.9 - 4.0) + 4.0).toFixed(1),
         left: 'center',
         top: 'center',
         textStyle: {
@@ -202,7 +202,7 @@ export default {
     });
     roundStudy.setOption({
       title: {
-        text: '4.5',
+        text: (Math.random() * (4.9 - 4.0) + 4.0).toFixed(1),
         left: 'center',
         top: 'center',
         textStyle: {
@@ -246,7 +246,7 @@ export default {
     });
     roundJob.setOption({
       title: {
-        text: '4.7',
+        text: (Math.random() * (4.9 - 4.0) + 4.0).toFixed(1),
         left: 'center',
         top: 'center',
         textStyle: {
@@ -290,7 +290,7 @@ export default {
     });
     roundCompare.setOption({
       title: {
-        text: '4.9',
+        text: (Math.random() * (4.9 - 4.5) + 4.5).toFixed(1),
         left: 'center',
         top: 'center',
         textStyle: {

@@ -100,8 +100,17 @@ export default {
     },
     // 重置搜索
     reset() {
-      this.collectionList = JSON.parse(localStorage.getItem("collection"))
-      this.name = ""
+      if (!(localStorage.getItem("stdUser") || localStorage.getItem("user"))) {
+        this.$message({
+          duration: 1200,
+          message: "请进行用户登录!",
+          type: "error"
+        })
+      }
+      else {
+        this.collectionList = JSON.parse(localStorage.getItem("collection"))
+        this.name = ""
+      }
     },
     // 存取分页大小
     handleSizeChange(pageSize) {

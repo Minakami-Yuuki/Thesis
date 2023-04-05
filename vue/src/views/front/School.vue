@@ -141,20 +141,7 @@ export default {
         console.log(res.data)
         this.tableData = res.data.records
         this.total = res.data.total
-        for (let i = 0; i < res.data.records.length; i++) {
-          if (res.data.records[i].classFlag === 3) {
-            res.data.records[i].classFlag = 985
-          }
-          else if (res.data.records[i].classFlag === 2) {
-            res.data.records[i].classFlag = 211
-          }
-          else if (res.data.records[i].classFlag === 1) {
-            res.data.records[i].classFlag = '双一流'
-          }
-          else {
-            res.data.records[i].classFlag = '普通本科'
-          }
-        }
+        this.switchClassFlag()
         if (this.name === "" && this.button === 1) {
           this.$message({
             duration: 800,

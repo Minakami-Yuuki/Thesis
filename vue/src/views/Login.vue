@@ -1,7 +1,7 @@
 <template>
  <div class="wrapper-back">
    <div style="margin: 200px auto; width: 350px; height: 300px; padding: 20px; border-radius: 10px" class="login_form">
-     <div style="margin: 20px 0; text-align: center; font-size: 24px; font-weight: bold; color: #00BFFF"> Login </div>
+     <div style="margin: 20px 0; text-align: center; font-size: 24px; font-weight: bold; color: #4C83FF"> Login </div>
 
        <el-form :model="user" :rules="rules" ref="userForm">
 

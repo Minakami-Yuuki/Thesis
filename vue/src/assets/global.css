@@ -33,7 +33,7 @@
 .wrapper-back {
     height: 100vh;
     /*background-image: linear-gradient(to bottom left, #FC466B, #3F5EFB);*/
-    background-image: url("~@/assets/backLogin.jpg");
+    background-image: url("~@/assets/backLogin_2.jpg");
     background-size: cover;
     background-position: center;
     overflow: hidden;

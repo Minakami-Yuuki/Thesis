@@ -101,14 +101,14 @@ export default {
   },
   methods: {
     // 初始化
-    init() {
+    async init() {
       this.request.get("/application/pageName", {
         params: {
           pageNum: this.pageNum,
           pageSize: this.pageSize,
           name: JSON.parse(localStorage.getItem("stdUser")) ? JSON.parse(localStorage.getItem("stdUser")).username : JSON.parse(localStorage.getItem("user")).username,
         }
-      }).then(res => {
+      }).then(async res => {
         // console.log(res)
         this.form.score = res.data.records[0].score
         let a = []
@@ -123,7 +123,7 @@ export default {
           if (a[i] === null) {
             break
           }
-          this.request.get("/school/pageName", {
+          await this.request.get("/school/pageName", {
             params: {
               pageNum: this.pageNum,
               pageSize: this.pageSize,
@@ -134,25 +134,31 @@ export default {
             localTemp.push(res2.data.records[0])
           })
         }
-        setTimeout(() => {
-          // console.log(localTemp)
-          if (localStorage.getItem("application")) {}
-          else {
-            localStorage.setItem("application", JSON.stringify(localTemp))
-          }
-        }, 1000);
+        if (localStorage.getItem("application")) {
+        } else {
+          localStorage.setItem("application", JSON.stringify(localTemp))
+        }
       })
     },
     // 重置搜索
     reset() {
-      this.form.score = undefined
-      localStorage.removeItem("application")
-      // location.reload()
-      this.$message({
-        duration: 200,
-        message: "重置成功!",
-        type: "success"
-      })
+      if (!(localStorage.getItem("stdUser") || localStorage.getItem("user"))) {
+        this.$message({
+          duration: 1200,
+          message: "请进行用户登录!",
+          type: "error"
+        })
+      }
+      else {
+        this.form.score = undefined
+        localStorage.removeItem("application")
+        // location.reload()
+        this.$message({
+          duration: 200,
+          message: "重置成功!",
+          type: "success"
+        })
+      }
     },
     // 存取分页大小
     handleSizeChange(pageSize) {
@@ -302,7 +308,7 @@ export default {
                 listAll[0] = this.list[i]
               }
               else {
-                if ((this.list[i].score >= math.subtract(res2.data.records[0].score, 20)) && (this.list[i].score <= math.add(res2.data.records[0].score, 20))) {
+                if ((this.list[i].score >= math.subtract(res2.data.records[0].score, 20)) && (this.list[i].score <= math.add(res2.data.records[0].score, 10))) {
                   listAll.push(this.list[i])
                   // window.alert( JSON.stringify(this.list[i].application1) + '\n' +
                   //               JSON.stringify(this.list[i].application2) + '\n' +
