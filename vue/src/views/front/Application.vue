@@ -166,7 +166,7 @@ export default {
       console.log(pageSize)
       this.pageSize = pageSize
       this.button = 0
-      if ((this.value[0] === 0) && (this.value[1] === 750)) {
+      if ((this.value[0] === 0) && (this.value[1] === 750 && (this.form.province === '全部') && (this.form.schoolClass === '全部'))) {
         this.load()
       }
       else {
@@ -177,7 +177,7 @@ export default {
       console.log(pageNum)
       this.pageNum = pageNum
       this.button = 0
-      if ((this.value[0] === 0) && (this.value[1] === 750)) {
+      if ((this.value[0] === 0) && (this.value[1] === 750) && (this.form.province === '全部') && (this.form.schoolClass === '全部')) {
         this.load()
       }
       else {
@@ -206,6 +206,11 @@ export default {
         //   this.$router.push("/login")
         //   return false
         // }
+        if ((val === this.form.province) || (val === this.form.schoolClass)) {
+          this.pageNum = 1
+          this.handleCurrentChange(this.pageNum)
+          return
+        }
         console.log(val)
         this.tableData = res.data.records
         this.total = res.data.total

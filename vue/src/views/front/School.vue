@@ -163,32 +163,25 @@ export default {
       console.log(pageSize)
       this.pageSize = pageSize
       this.button = 0
-      if (this.specialtyName !== undefined) {
-        this.handleSpecialty()
+      let detailFrom = this.$route.query
+      if (detailFrom.specialtyName !== undefined) {
+        this.handleSearch()
       }
       else {
-        if (this.form.province !== '全部') {
-          this.handleSearch()
-        }
-        else {
-          this.load()
-        }
+        this.load()
       }
     },
+    // 存取当前页
     handleCurrentChange(pageNum) {
       console.log(pageNum)
       this.pageNum = pageNum
       this.button = 0
-      if (this.specialtyName !== undefined) {
-        this.handleSpecialty()
+      let detailFrom = this.$route.query
+      if (detailFrom.specialtyName !== undefined) {
+        this.handleSearch()
       }
       else {
-        if (this.form.province !== '全部') {
-          this.handleSearch()
-        }
-        else {
-          this.load()
-        }
+        this.load()
       }
     },
     // 批量删除按钮
@@ -199,10 +192,9 @@ export default {
     // 查询院校地区
     handleSearch(val) {
       let temp = []
-      console.log(this.$route.query)
       let detailFrom = this.$route.query
-      // console.log(detailFrom.specialtyName)
-      // 专业跳转院校查询
+
+      // 具体专业查询
       if (detailFrom.specialtyName !== undefined) {
         let tempAll = JSON.parse(localStorage.getItem("tempAll"))
 
@@ -232,7 +224,16 @@ export default {
               }
             }
           }
-          this.tableData = temp
+          // 跳转页数归 1
+          if ((val === this.form.province) || (val === this.form.schoolClass)) {
+            this.pageNum = 1
+            this.handleCurrentChange(this.pageNum)
+            return
+          }
+
+          // 每页显示10个
+          this.tableData = temp.slice(10 * (this.pageNum - 1), 10 * this.pageNum)
+          console.log(this.tableData)
           this.total = temp.length
           this.switchClassFlag()
         }
@@ -247,11 +248,6 @@ export default {
             classFlag: this.classMap[this.form.schoolClass]
           }
         }).then(res => {
-          // Token 不合法
-          // if (res.code === '402') {
-          //   this.$router.push("/login")
-          //   return false
-          // }
           console.log(val)
           this.tableData = res.data.records
           this.total = res.data.total
@@ -259,20 +255,20 @@ export default {
         })
       }
     },
-    // 专业查询跳转
+    // 总体专业查询
     handleSpecialty() {
       let detailFrom = this.$route.query
       this.request.get("/school/pageSpecialty", {
         params: {
           pageNum: this.pageNum,
           pageSize: this.pageSize,
-          specialty: detailFrom.specialtyName
+          specialty: detailFrom.specialtyName,
         }
       }).then(res => {
         console.log(res.data)
         this.tableData = res.data.records
-        this.switchClassFlag()
         this.total = res.data.total
+        this.switchClassFlag()
         this.button = 1
 
             this.request.get("/school/pageSpecialty", {

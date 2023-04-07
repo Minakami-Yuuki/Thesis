@@ -124,6 +124,7 @@ public class StdApplicationController {
             // 5个志愿 + 1个名称
             int length = 6;
             String userName = listAll.get(i).getName();
+            // 对应不同用户和专业总数
             userItemLength.put(userName, length);
             userID.put(userName, i);
             idUser.put(i, userName);
@@ -131,9 +132,11 @@ public class StdApplicationController {
             // 建立 用户 -- 物品 倒排表
             for (int j = 0; j < length - 1; j++) {
                 if (items.contains(user_item[j])) {
+                    // 从第一个往后直接添加
                     itemUserCollection.get(user_item[j]).add(userName);
                 }
                 else {
+                    // 添加第一个用户映射
                     items.add(user_item[j]);
                     itemUserCollection.put(user_item[j], new HashSet<String>());
                     itemUserCollection.get(user_item[j]).add(userName);
@@ -170,26 +173,31 @@ public class StdApplicationController {
                         "--" +
                         idUser.get(j) +
                         " 相似度:" +
-                        sparseMatrix[recommendUserId][j] / Math.sqrt(userItemLength.get(idUser.get(recommendUserId)) * userItemLength.get(idUser.get(j))));
+                        sparseMatrix[recommendUserId][j] /
+                                Math.sqrt(userItemLength.get(idUser.get(recommendUserId)) *
+                                        userItemLength.get(idUser.get(j))));
             }
         }
 
-        // 计算指定用户recommendUser的物品推荐度
-        // 遍历每一件物品
+        // 计算当前用户的院校推荐度
+        // 遍历集合
         for(String item : items){
-            // 得到购买当前物品的所有用户集合
+            // 当前院校集合
             Set<String> users = itemUserCollection.get(item);
+            // 若当前院校未包含于推荐用户的院校集内
             if(!users.contains(recommendUser)){
-                // 如果被推荐用户没有购买当前物品，则进行推荐度计算
                 double itemRecommendDegree = 0.0;
                 for(String user : users){
-                    // 物品对用户的推荐度计算
-                    itemRecommendDegree += sparseMatrix[userID.get(recommendUser)][userID.get(user)] / Math.sqrt(userItemLength.get(recommendUser) * userItemLength.get(user));
+                    // 进行物品和用户的相似度叠加 生成院校推荐度
+                    itemRecommendDegree +=
+                            sparseMatrix[userID.get(recommendUser)][userID.get(user)] /
+                                    Math.sqrt(userItemLength.get(recommendUser) * userItemLength.get(user));
                 }
                 list.put(item, itemRecommendDegree);
 //                System.out.println("The item "+item+" for "+recommendUser +"'s recommended degree:"+itemRecommendDegree);
             }
         }
+
         // 移除空志愿
         list.remove(null);
         List<String> res = new ArrayList<>(sortByValueFloatDesc(list).keySet());
@@ -208,7 +216,7 @@ public class StdApplicationController {
         }
     }
 
-    // 将支援推荐度从大到小进行排序
+    // 将志愿推荐度从大到小进行排序
     private static Map<String, Double> sortByValueFloatDesc(Map<String, Double> nowPartTwoData) {
         List<Map.Entry<String, Double>> lists = new ArrayList<Map.Entry<String, Double>>(nowPartTwoData.entrySet());
         LinkedHashMap<String, Double> linkedHashMap = new LinkedHashMap<String, Double>();

@@ -91,7 +91,7 @@ public class SchoolController {
         if (Objects.equals(classFlag, 0)) {
             return Result.success(schoolService.page(new Page<>(pageNum, pageSize), queryWrapper.eq("class_flag", classFlag)));
         }
-        queryWrapper.ge(classFlag != null, "class_flag", classFlag);
+        queryWrapper.eq(classFlag != null, "class_flag", classFlag);
         queryWrapper.ge(minScore != null, "min_score", minScore);
         queryWrapper.le(maxScore != null, "min_score", maxScore);
         // 逆序
@@ -107,6 +107,7 @@ public class SchoolController {
         // queryWrapper.like(username != null, "username", username);
         QueryWrapper<School> queryWrapper = new QueryWrapper<>();
         queryWrapper.like(specialty != null, "specialty", specialty);
+
         // 逆序
         queryWrapper.orderByAsc("min_rank");
         return Result.success(schoolService.page(new Page<>(pageNum, pageSize), queryWrapper));
