@@ -258,7 +258,8 @@ export default {
       this.load()
     },
     // 头像上传成功提示
-    handleAvatarSuccess() {
+    handleAvatarSuccess(res) {
+      this.form.avatar = res
       this.$message({
         duration: 800,
         message: "头像上传成功!",

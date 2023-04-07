@@ -217,14 +217,14 @@ export default {
       // 将表单值传入后端
       this.request.post("/stdUser", this.form).then(res => {
         if(res.code === '200') {
-          this.$message.success("添加成功!")
+          this.$message.success("修改成功!")
           // 关闭弹窗
           this.dialogFormVisible = false
           // 刷新表单
           this.load()
         }
         else {
-          this.$message.error("添加失败!")
+          this.$message.error("修改失败!")
         }
       })
     },
@@ -238,7 +238,8 @@ export default {
       this.load()
     },
     // 头像上传成功提示
-    handleAvatarSuccess() {
+    handleAvatarSuccess(res) {
+      this.form.avatar = res
       this.$message({
         duration: 800,
         message: "头像上传成功!",

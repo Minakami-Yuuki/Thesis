@@ -7,6 +7,9 @@
       <div class="right-content">
         <div class="name-pos">
           {{ detail.name }}
+          <div class="tag" style="font-size: 10px">
+            {{ detail.detailProvince + detail.detailArea }}
+          </div>
         </div>
         <div class="tag-line">
           <div class="tag">公办</div>
@@ -138,6 +141,8 @@ export default {
         console.log(res)
         this.tableData = res.data.records
         this.detail.detailClassFlag = this.tableData[0].classFlag
+        this.detail.detailProvince = this.tableData[0].province
+        this.detail.detailArea = this.tableData[0].area
         this.detail.detailDescription = this.tableData[0].description
         this.detail.detailSpecialty = this.tableData[0].specialty.split('、').slice('0', '11')
         this.detail.detailScore = this.tableData[0].minScore

@@ -116,8 +116,8 @@ export default {
   created() {
     // 刷新页面
     let detailFrom = this.$route.query
-    // console.log(detailFrom)
-    if (detailFrom === null) {
+    // console.log(detailFrom.specialtyName)
+    if (detailFrom.specialtyName === undefined) {
       this.load()
     }
     else {
@@ -163,22 +163,32 @@ export default {
       console.log(pageSize)
       this.pageSize = pageSize
       this.button = 0
-      if (this.specialtyName !== "") {
+      if (this.specialtyName !== undefined) {
         this.handleSpecialty()
       }
       else {
-        this.load()
+        if (this.form.province !== '全部') {
+          this.handleSearch()
+        }
+        else {
+          this.load()
+        }
       }
     },
     handleCurrentChange(pageNum) {
       console.log(pageNum)
       this.pageNum = pageNum
       this.button = 0
-      if (this.specialtyName !== "") {
+      if (this.specialtyName !== undefined) {
         this.handleSpecialty()
       }
       else {
-        this.load()
+        if (this.form.province !== '全部') {
+          this.handleSearch()
+        }
+        else {
+          this.load()
+        }
       }
     },
     // 批量删除按钮
@@ -189,12 +199,15 @@ export default {
     // 查询院校地区
     handleSearch(val) {
       let temp = []
-      let tempAll = JSON.parse(localStorage.getItem("tempAll"))
+      console.log(this.$route.query)
+      let detailFrom = this.$route.query
+      // console.log(detailFrom.specialtyName)
       // 专业跳转院校查询
-      if (this.specialtyName !== "") {
-        console.log(this.tableData)
+      if (detailFrom.specialtyName !== undefined) {
+        let tempAll = JSON.parse(localStorage.getItem("tempAll"))
+
         if (this.form.province === "全部" && this.classMap[this.form.schoolClass] === "") {
-          this.tableData = tempAll
+          this.handleSpecialty()
           this.switchClassFlag()
         }
         else {
@@ -208,6 +221,13 @@ export default {
           else if (this.classMap[this.form.schoolClass] === "") {
             for (let i = 0; i < tempAll.length; i++) {
               if (tempAll[i].province === this.form.province) {
+                temp.push(tempAll[i])
+              }
+            }
+          }
+          else {
+            for (let i = 0; i < tempAll.length; i++) {
+              if ((tempAll[i].province === this.form.province) && (tempAll[i].classFlag === this.classMap[this.form.schoolClass])) {
                 temp.push(tempAll[i])
               }
             }
@@ -251,10 +271,20 @@ export default {
       }).then(res => {
         console.log(res.data)
         this.tableData = res.data.records
-        localStorage.setItem("tempAll", JSON.stringify(this.tableData))
         this.switchClassFlag()
         this.total = res.data.total
         this.button = 1
+
+            this.request.get("/school/pageSpecialty", {
+              params: {
+                pageNum: 1,
+                pageSize: this.total,
+                specialty: detailFrom.specialtyName
+              }
+            }).then(res2 => {
+              console.log(res2)
+              localStorage.setItem("tempAll", JSON.stringify(res2.data.records))
+            })
       })
     },
     // 收藏操作

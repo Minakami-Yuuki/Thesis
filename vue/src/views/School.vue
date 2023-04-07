@@ -69,7 +69,7 @@
     </el-pagination>
   </div>
 
-    <el-dialog title="用户信息" :visible.sync="dialogFormAllVisible" width="65%">
+    <el-dialog title="院校信息" :visible.sync="dialogFormAllVisible" width="65%">
       <el-form label-width="150px" size="small">
         <el-form-item class="avatar-uploader-personInfo" label="学校图标">
           <el-upload

@@ -32,8 +32,8 @@
 /* 后台注册登录背景样式 */
 .wrapper-back {
     height: 100vh;
-    /*background-image: linear-gradient(to bottom left, #FC466B, #3F5EFB);*/
-    background-image: url("~@/assets/backLogin_2.jpg");
+    background-image: linear-gradient(to bottom left, #FC466B, #3F5EFB);
+    /*background-image: url("~@/assets/backLogin_2.jpg");*/
     background-size: cover;
     background-position: center;
     overflow: hidden;
@@ -42,8 +42,8 @@
 /* 前台注册登录背景样式 */
 .wrapper-front {
     height: 100vh;
-    /*background-image: linear-gradient(to bottom left, #FC466B, #3F5EFB);*/
-    background-image: url("~@/assets/frontLogin2.GIF");
+    background-image: linear-gradient(to bottom left, #0fffb7, #ff42e9);
+    /*background-image: url("~@/assets/frontLogin2.GIF");*/
     background-size: cover;
     background-position: center;
     overflow: hidden;
