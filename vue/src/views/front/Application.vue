@@ -143,6 +143,8 @@ export default {
         console.log(res.data)
         this.tableData = res.data.records
         this.total = res.data.total
+        this.form.province = "全部"
+        this.form.schoolClass = "全部"
         this.setClassFlag(res)
         if (this.name === "" && this.button === 1) {
           this.$message({
@@ -212,6 +214,7 @@ export default {
           return
         }
         console.log(val)
+        this.name = ""
         this.tableData = res.data.records
         this.total = res.data.total
         this.setClassFlag(res)

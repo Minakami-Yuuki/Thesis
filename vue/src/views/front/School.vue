@@ -118,7 +118,12 @@ export default {
     let detailFrom = this.$route.query
     // console.log(detailFrom.specialtyName)
     if (detailFrom.specialtyName === undefined) {
-      this.load()
+      if ((this.form.province === "全部") && (this.form.schoolClass === "全部")) {
+        this.load()
+      }
+      else {
+        this.handleSearch()
+      }
     }
     else {
       this.handleSpecialty()
@@ -163,12 +168,11 @@ export default {
       console.log(pageSize)
       this.pageSize = pageSize
       this.button = 0
-      let detailFrom = this.$route.query
-      if (detailFrom.specialtyName !== undefined) {
-        this.handleSearch()
+      if ((this.form.province === '全部') && (this.form.schoolClass === '全部')) {
+        this.load()
       }
       else {
-        this.load()
+        this.handleSearch()
       }
     },
     // 存取当前页
@@ -176,12 +180,11 @@ export default {
       console.log(pageNum)
       this.pageNum = pageNum
       this.button = 0
-      let detailFrom = this.$route.query
-      if (detailFrom.specialtyName !== undefined) {
-        this.handleSearch()
+      if ((this.form.province === '全部') && (this.form.schoolClass === '全部')) {
+        this.load()
       }
       else {
-        this.load()
+        this.handleSearch()
       }
     },
     // 批量删除按钮
@@ -248,7 +251,15 @@ export default {
             classFlag: this.classMap[this.form.schoolClass]
           }
         }).then(res => {
+          // 跳转页数归 1
+          if ((val === this.form.province) || (val === this.form.schoolClass)) {
+            this.pageNum = 1
+            this.handleCurrentChange(this.pageNum)
+            return
+          }
+
           console.log(val)
+          this.name = ""
           this.tableData = res.data.records
           this.total = res.data.total
           this.switchClassFlag()

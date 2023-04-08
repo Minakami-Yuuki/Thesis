@@ -121,7 +121,7 @@ export default {
       this.request.get("/school").then(res => {
         this.detail = res.data
         this.randomSortArray(this.detail)
-        console.log(this.detail)
+        // console.log(this.detail)
       })
     },
     randomSortArray(arr) {
