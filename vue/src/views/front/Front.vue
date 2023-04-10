@@ -7,7 +7,7 @@
           <img src="../../assets/SG.jpg" alt="" style="width: 30px; position: relative; top: 5px; right: 0">
         </div>
         <div>
-          <div style="flex: 1; font-weight: bold"> 高考志愿填报系统 </div>
+          <div style="flex: 1; font-weight: bold"> 高考志愿填报推荐系统 </div>
         </div>
       </div>
 
@@ -296,6 +296,9 @@ export default {
 </script>
 
 <style scoped>
+.el-menu--collapse .el-menu .el-submenu, .el-menu--popup{
+  min-width: 120px!important;
+}
 
 .item {
   display: inline-block;

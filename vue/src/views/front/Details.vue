@@ -57,7 +57,23 @@
             </el-select>
           </div>
           <el-card v-for="(name, index) in this.detail.detailSpecialty">
-            <el-descriptions :title="name" :key="index"/>
+            <el-descriptions :title="name" :key="index">
+              <el-descriptions-item label="最低分数" size="small">
+                <el-tag style="font-weight: bold">
+                  {{(Math.random() * (detail.detailScore - (detail.detailScore - 20)) + (detail.detailScore - 20)).toFixed(0)}}
+                </el-tag>
+              </el-descriptions-item>
+              <el-descriptions-item label="最低排名" size="small">
+                <el-tag style="font-weight: bold">
+                  {{(Math.random() * (detail.detailRank - (detail.detailRank - 20)) + (detail.detailRank - 20)).toFixed(0)}}
+                </el-tag>
+              </el-descriptions-item>
+              <el-descriptions-item>
+                <el-button type="danger" @click="collection(tableData, name)" size="mini" style="font-weight: bold">
+                  收藏
+                </el-button>
+              </el-descriptions-item>
+            </el-descriptions>
           </el-card>
         </div>
       </div>
@@ -100,6 +116,7 @@ export default {
       pageSize: 10,
       tableData: [],
       detail: {},
+      collectionList: JSON.parse(localStorage.getItem("collectionSpecialty")) ? JSON.parse(localStorage.getItem("collectionSpecialty")) : [],
       form: {
         type: "国家特色专业",
       },
@@ -144,13 +161,51 @@ export default {
         this.detail.detailProvince = this.tableData[0].province
         this.detail.detailArea = this.tableData[0].area
         this.detail.detailDescription = this.tableData[0].description
-        this.detail.detailSpecialty = this.tableData[0].specialty.split('、').slice('0', '11')
+        this.detail.detailSpecialty = this.tableData[0].specialty.split('、')
         this.detail.detailScore = this.tableData[0].minScore
         this.detail.detailRank = this.tableData[0].minRank
       })
       this.detail.men_rate = (Math.random() * (80 - 60) + 60).toFixed(2)
       this.detail.female_rate = (100 - this.detail.men_rate).toFixed(2)
       console.log("detailAvatar", this.detail)
+    },
+    // 收藏操作
+    collection(tableData, name) {
+      if (localStorage.getItem("stdUser") || localStorage.getItem("user")) {
+        console.log(tableData)
+        this.collectionList.push(tableData)
+        // console.log(this.collectionList)
+        localStorage.setItem("collectionSpecialty", JSON.stringify(this.collectionList))
+        let i = 0, j = 0
+        for (i; i < this.collectionList.length - 1 && j === 0; i++) {
+          if (this.collectionList[i].name === tableData.name) {
+            this.collectionList.splice(i, 1)
+            localStorage.setItem("collectionSpecialty", JSON.stringify(this.collectionList))
+            j = 1
+          }
+        }
+        if (j === 1) {
+          this.$message({
+            duration: 1200,
+            message: "当前院校已添加至收藏!",
+            type: "error"
+          })
+        }
+        else {
+          this.$message({
+            duration: 800,
+            message: "收藏成功!",
+            type: "success"
+          })
+        }
+      }
+      else {
+        this.$message({
+          duration: 1200,
+          message: "请进行用户登录!",
+          type: "error"
+        })
+      }
     },
   },
   mounted() {
@@ -614,53 +669,53 @@ export default {
   height: 100vh;
 }
 
-button {
-  border: 0;
-  background: unset;
-  text-transform: uppercase;
-  color: #4361ee;
-  font-weight: bold;
-  position: relative;
-  outline: none;
-  padding: 10px 20px;
-  box-sizing: border-box;
-}
+/*button {*/
+/*  border: 0;*/
+/*  background: unset;*/
+/*  text-transform: uppercase;*/
+/*  color: #4361ee;*/
+/*  font-weight: bold;*/
+/*  position: relative;*/
+/*  outline: none;*/
+/*  padding: 10px 20px;*/
+/*  box-sizing: border-box;*/
+/*}*/
 
-button::before, button::after {
-  box-sizing: inherit;
-  position: absolute;
-  content: '';
-  border: 2px solid transparent;
-  width: 0;
-  height: 0;
-}
+/*button::before, button::after {*/
+/*  box-sizing: inherit;*/
+/*  position: absolute;*/
+/*  content: '';*/
+/*  border: 2px solid transparent;*/
+/*  width: 0;*/
+/*  height: 0;*/
+/*}*/
 
-button::after {
-  bottom: 0;
-  right: 0;
-}
+/*button::after {*/
+/*  bottom: 0;*/
+/*  right: 0;*/
+/*}*/
 
-button::before {
-  top: 0;
-  left: 0;
-}
+/*button::before {*/
+/*  top: 0;*/
+/*  left: 0;*/
+/*}*/
 
-button:hover::before, button:hover::after {
-  width: 100%;
-  height: 100%;
-}
+/*button:hover::before, button:hover::after {*/
+/*  width: 100%;*/
+/*  height: 100%;*/
+/*}*/
 
-button:hover::before {
-  border-top-color: #4361ee;
-  border-right-color: #4361ee;
-  transition: width 0.3s ease-out, height 0.3s ease-out 0.3s;
-}
+/*button:hover::before {*/
+/*  border-top-color: #4361ee;*/
+/*  border-right-color: #4361ee;*/
+/*  transition: width 0.3s ease-out, height 0.3s ease-out 0.3s;*/
+/*}*/
 
-button:hover::after {
-  border-bottom-color: #4361ee;
-  border-left-color: #4361ee;
-  transition: border-color 0s ease-out 0.6s, width 0.3s ease-out 0.6s, height 0.3s ease-out 1s;
-}
+/*button:hover::after {*/
+/*  border-bottom-color: #4361ee;*/
+/*  border-left-color: #4361ee;*/
+/*  transition: border-color 0s ease-out 0.6s, width 0.3s ease-out 0.6s, height 0.3s ease-out 1s;*/
+/*}*/
 
 .info-title {
   color: #19d3ea;
