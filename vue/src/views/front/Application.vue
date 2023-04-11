@@ -161,6 +161,8 @@ export default {
       this.name = ""
       this.button = 0
       this.value = [0, 750]
+      this.form.province = "全部"
+      this.form.schoolClass = "全部"
       this.load()
     },
     // 存取分页大小

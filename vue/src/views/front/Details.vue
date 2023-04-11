@@ -115,8 +115,9 @@ export default {
       pageNum: 1,
       pageSize: 10,
       tableData: [],
+      tableDataList: [],
       detail: {},
-      collectionList: JSON.parse(localStorage.getItem("collectionSpecialty")) ? JSON.parse(localStorage.getItem("collectionSpecialty")) : [],
+      collectionList: JSON.parse(localStorage.getItem("collection")) ? JSON.parse(localStorage.getItem("collection")) : [],
       form: {
         type: "国家特色专业",
       },
@@ -156,14 +157,15 @@ export default {
         //   return false
         // }
         console.log(res)
-        this.tableData = res.data.records
-        this.detail.detailClassFlag = this.tableData[0].classFlag
-        this.detail.detailProvince = this.tableData[0].province
-        this.detail.detailArea = this.tableData[0].area
-        this.detail.detailDescription = this.tableData[0].description
-        this.detail.detailSpecialty = this.tableData[0].specialty.split('、')
-        this.detail.detailScore = this.tableData[0].minScore
-        this.detail.detailRank = this.tableData[0].minRank
+        this.tableData = res.data.records[0]
+        this.switchClassFlag()
+        this.detail.detailClassFlag = this.tableData.classFlag
+        this.detail.detailProvince = this.tableData.province
+        this.detail.detailArea = this.tableData.area
+        this.detail.detailDescription = this.tableData.description
+        this.detail.detailSpecialty = this.tableData.specialty.split('、').slice(0, 10)
+        this.detail.detailScore = this.tableData.minScore
+        this.detail.detailRank = this.tableData.minRank
       })
       this.detail.men_rate = (Math.random() * (80 - 60) + 60).toFixed(2)
       this.detail.female_rate = (100 - this.detail.men_rate).toFixed(2)
@@ -172,15 +174,26 @@ export default {
     // 收藏操作
     collection(tableData, name) {
       if (localStorage.getItem("stdUser") || localStorage.getItem("user")) {
-        console.log(tableData)
         this.collectionList.push(tableData)
-        // console.log(this.collectionList)
-        localStorage.setItem("collectionSpecialty", JSON.stringify(this.collectionList))
+        this.$set(this.collectionList, this.collectionList.length - 1, {
+          area: tableData.area,
+          classFlag: tableData.classFlag,
+          id: tableData.id,
+          minRank: tableData.minRank,
+          minScore: tableData.minScore,
+          name: tableData.name,
+          province: tableData.province,
+          specialty: name,
+          avatar: tableData.avatar,
+        });
+        // this.$set(this.collectionList[this.collectionList.length - 1], 'specialty', name)
+        localStorage.setItem("collection", JSON.stringify(this.collectionList))
+
         let i = 0, j = 0
         for (i; i < this.collectionList.length - 1 && j === 0; i++) {
-          if (this.collectionList[i].name === tableData.name) {
+          if ((this.collectionList[i].name === tableData.name) && (this.collectionList[i].specialty === name)) {
             this.collectionList.splice(i, 1)
-            localStorage.setItem("collectionSpecialty", JSON.stringify(this.collectionList))
+            localStorage.setItem("collection", JSON.stringify(this.collectionList))
             j = 1
           }
         }
@@ -207,6 +220,18 @@ export default {
         })
       }
     },
+    switchClassFlag() {
+      if (this.tableData.classFlag === 3 || this.tableData.classFlag === 985) {
+        this.tableData.classFlag = 985
+      } else if (this.tableData.classFlag === 2 || this.tableData.classFlag === 211) {
+        this.tableData.classFlag = 211
+      } else if (this.tableData.classFlag === 1 || this.tableData.classFlag === '双一流') {
+        this.tableData.classFlag = '双一流'
+      }
+      else {
+        this.tableData.classFlag = '普通本科'
+      }
+    }
   },
   mounted() {
     // 初始渲染图表

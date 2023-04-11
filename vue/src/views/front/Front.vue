@@ -40,7 +40,8 @@
           </el-menu-item>
           <el-menu-item index="/front/collection">
             <a @click="$router.push('/front/collection')" target="_blank">
-              院校收藏</a>
+              院校收藏
+            </a>
           </el-menu-item>
           <el-menu-item index="/login">
             <a @click="$router.push('/login')" target="_blank">

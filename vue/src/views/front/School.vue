@@ -18,6 +18,17 @@
             <el-radio-button label="其它" />
           </el-radio-group>
         </div>
+        <el-form-item label="分数区间" style="display: inline-block; margin-left: 37px">
+          <div style="margin-left: 50px; max-width: 300px">
+            <el-slider
+                v-model="value"
+                range
+                :min="0"
+                :max="750"
+                @change="handleSearch">
+            </el-slider>
+          </div>
+        </el-form-item>
         <el-form-item label="学校地区" style="display: inline-block; margin-left: 37px">
           <el-radio-group v-model="form.province" @change="handleSearch">
             <div style="max-width: 1400px;">
@@ -54,8 +65,8 @@
           <el-table-column prop="minRank" label="最低录取排名"></el-table-column>
           <el-table-column label="操作" align="center">
             <template slot-scope="scope">
-              <el-button type="success" slot="reference" @click="details(scope.row)">查看 <i class="el-icon-add-location"></i></el-button>
-              <el-button type="danger" slot="reference" @click="collection(scope.row)">收藏 <i class="el-icon-add-location"></i></el-button>
+              <el-button v-if="!specialtyName" type="success" slot="reference" @click="details(scope.row)">查看 <i class="el-icon-add-location"></i></el-button>
+              <el-button v-if="specialtyName" type="danger" slot="reference" @click="collection(scope.row)">收藏 <i class="el-icon-add-location"></i></el-button>
             </template>
           </el-table-column>
         </el-table>
@@ -89,6 +100,8 @@ export default {
       pageSize: 10,
       name: "",
       button: 0,
+      value: [0, 750],
+      specialtyName: this.$route.query.specialtyName ? this.$route.query.specialtyName : "",
       collectionList: JSON.parse(localStorage.getItem("collection")) ? JSON.parse(localStorage.getItem("collection")) : [],
       form: {
         province: '全部',
@@ -161,6 +174,9 @@ export default {
     reset() {
       this.name = ""
       this.button = 0
+      this.value = [0, 750]
+      this.form.province = "全部"
+      this.form.schoolClass = "全部"
       this.load()
     },
     // 存取分页大小
@@ -248,7 +264,9 @@ export default {
             pageNum: this.pageNum,
             pageSize: this.pageSize,
             province: this.form.province,
-            classFlag: this.classMap[this.form.schoolClass]
+            classFlag: this.classMap[this.form.schoolClass],
+            minScore: this.value[0],
+            maxScore: this.value[1],
           }
         }).then(res => {
           // 跳转页数归 1
@@ -297,13 +315,14 @@ export default {
     // 收藏操作
     collection(row) {
       if (localStorage.getItem("stdUser") || localStorage.getItem("user")) {
-        console.log(row)
+        let detailFrom = this.$route.query
+        this.$set(row, 'specialty', detailFrom.specialtyName);
         this.collectionList.push(row)
         // console.log(this.collectionList)
         localStorage.setItem("collection", JSON.stringify(this.collectionList))
         let i = 0, j = 0
         for (i; i < this.collectionList.length - 1 && j === 0; i++) {
-          if (this.collectionList[i].name === row.name) {
+          if ((this.collectionList[i].name === row.name) && (this.collectionList[i].specialty === row.specialty)) {
             this.collectionList.splice(i, 1)
             localStorage.setItem("collection", JSON.stringify(this.collectionList))
             j = 1

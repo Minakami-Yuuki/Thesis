@@ -29,11 +29,11 @@
           </template>
         </el-table-column>
         <el-table-column prop="classFlag" label="层级"></el-table-column>
+        <el-table-column prop="specialty" label="专业名称"></el-table-column>
         <el-table-column prop="minScore" label="最低录取分数线"></el-table-column>
         <el-table-column prop="minRank" label="最低录取排名"></el-table-column>
         <el-table-column label="操作" align="center">
           <template slot-scope="scope">
-            <el-button type="success" slot="reference" @click="details(scope.row)">查看 <i class="el-icon-add-location"></i></el-button>
             <el-button type="danger" slot="reference" @click="moveOut(scope.row)">移除收藏 <i class="el-icon-add-location"></i></el-button>
           </template>
         </el-table-column>
@@ -128,23 +128,11 @@ export default {
       console.log(val)
       this.multipleSelection = val
     },
-    // 跳转详细界面
-    details(row) {
-      // alert(JSON.stringify(row))
-      console.log(row)
-      this.$router.push({
-        path: "/front/details",
-        query: {
-          detailName: row.name,
-          detailAvatar: row.avatar,
-          detailClassFlag: row.classFlag
-        }
-      })
-    },
+    // 移除收藏
     moveOut(row) {
       console.log(row.name)
       for (let i = 0; i < this.collectionList.length; i++) {
-        if (this.collectionList[i].name === row.name) {
+        if ((this.collectionList[i].name === row.name) && (this.collectionList[i].specialty === row.specialty)) {
           this.collectionList.splice(i, 1)
         }
       }
