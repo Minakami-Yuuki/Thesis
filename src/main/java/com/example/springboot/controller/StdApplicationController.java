@@ -7,7 +7,6 @@ import org.springframework.web.bind.annotation.*;
 import javax.annotation.Resource;
 import java.util.Map.Entry;
 import java.util.*;
-import java.util.stream.Collectors;
 
 import com.example.springboot.common.Result;
 
@@ -94,7 +93,7 @@ public class StdApplicationController {
     }
 
 
-    // 推荐算法
+    // 协同过滤推荐算法
     @PostMapping("/Recommend")
     public List<String> findRecommend(@RequestBody List<StdApplication> listAll){
         // 建立用户稀疏矩阵，用于用户相似度计算【相似度矩阵】

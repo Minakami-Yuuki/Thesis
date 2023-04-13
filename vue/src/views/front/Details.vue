@@ -69,7 +69,10 @@
                 </el-tag>
               </el-descriptions-item>
               <el-descriptions-item>
-                <el-button type="danger" @click="collection(tableData, name)" size="mini" style="font-weight: bold">
+                <el-button type="danger"
+                           @click="
+                           collection(tableData, name)"
+                           size="mini" style="font-weight: bold">
                   收藏
                 </el-button>
               </el-descriptions-item>
@@ -179,10 +182,10 @@ export default {
           area: tableData.area,
           classFlag: tableData.classFlag,
           id: tableData.id,
-          minRank: tableData.minRank,
-          minScore: tableData.minScore,
           name: tableData.name,
           province: tableData.province,
+          minRank: tableData.minRank,
+          minScore: tableData.minScore,
           specialty: name,
           avatar: tableData.avatar,
         });

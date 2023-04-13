@@ -10,7 +10,7 @@
               <el-button class="ml-5" type="goon" @click="reset">重置</el-button>
             </el-form-item>
           </div>
-          <el-radio-group v-model="form.schoolClass" size="large" @change="handleSearch" style="margin-left: 638px">
+          <el-radio-group style="margin-left: 638px" v-model="form.schoolClass" size="large" @change="handleSearch" >
             <el-radio-button label="全部" />
             <el-radio-button label="985" />
             <el-radio-button label="211" />
@@ -18,6 +18,9 @@
             <el-radio-button label="其它" />
           </el-radio-group>
         </div>
+        <el-radio-group v-if="specialtyName" style="margin-left: 155px" size="large">
+          <el-radio-button > 专业： {{specialtyName}} </el-radio-button>
+        </el-radio-group>
         <el-form-item label="分数区间" style="display: inline-block; margin-left: 37px">
           <div style="margin-left: 50px; max-width: 300px">
             <el-slider

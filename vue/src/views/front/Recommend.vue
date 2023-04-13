@@ -96,8 +96,10 @@ export default {
     }
   },
   created() {
-    this.init()
-    this.switchClassFlag()
+    if (!JSON.parse(localStorage.getItem("reset"))) {
+      this.init()
+      this.switchClassFlag()
+    }
   },
   methods: {
     // 初始化
@@ -151,8 +153,11 @@ export default {
       }
       else {
         this.form.score = undefined
+        localStorage.removeItem("score")
         localStorage.removeItem("application")
-        // location.reload()
+        localStorage.removeItem("report")
+        localStorage.setItem("reset", JSON.stringify(true))
+        location.reload()
         this.$message({
           duration: 200,
           message: "重置成功!",

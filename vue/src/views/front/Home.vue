@@ -28,7 +28,7 @@
               <div >
                 <div class="text item item_desr">
                   <span >
-                    <img v-if="item.avatar" :src="item.avatar" class="avatar">
+                    <img v-if="item.avatar" :src="item.avatar" class="avatar" @click="details(item)">
                   </span>
                 </div>
                 <div class="text item">
@@ -48,6 +48,17 @@
                     <div v-if="item.classFlag >= 2 && item.classFlag < 3" class="tag">211 工程</div>
                     <div v-if="item.classFlag >= 1 && item.classFlag < 2" class="tag">双一流</div>
                     <div v-if="item.classFlag >= 0 && item.classFlag < 1" class="tag">普通本科</div>
+                  </div>
+                </div>
+                <div class="text item">
+                  <div class="item_tag">
+                    <span>专业：</span>
+                  </div>
+                  <div v-if="item.specialty.length === 1" class="item_desr">
+                    {{item.specialty}}
+                  </div>
+                  <div v-else class="item_desr">
+                    {{cutName(item.specialty)[0]}}
                   </div>
                 </div>
                 <div class="text item">
@@ -104,6 +115,8 @@ export default {
     return {
       banH: 300,
       detail: [],
+      name: "",
+      collectionList: JSON.parse(localStorage.getItem("collection")) ? JSON.parse(localStorage.getItem("collection")) : "",
       imgList: [
         {id: 0, idView: require("@/assets/Recommend1.png")},
         {id: 1, idView: require("@/assets/Recommend2.png")},
@@ -118,11 +131,46 @@ export default {
       this.banH = 660 // 轮播图高度
     },
     load() {
-      this.request.get("/school").then(res => {
-        this.detail = res.data
-        this.randomSortArray(this.detail)
-        // console.log(this.detail)
-      })
+      if (JSON.parse(localStorage.getItem("stdUser")) || JSON.parse(localStorage.getItem("user"))) {
+        this.request.get("/application/pageName", {
+          params: {
+            pageNum: 1,
+            pageSize: 1,
+            name: JSON.parse(localStorage.getItem("stdUser")) ? JSON.parse(localStorage.getItem("stdUser")).username : JSON.parse(localStorage.getItem("user")).username
+          }
+        }).then(res => {
+          // console.log(res.data.records[0].score)
+          let score = res.data.records[0].score
+          this.request.get("/school/pageSchool", {
+            params: {
+              pageNum: 1,
+              pageSize: 100,
+              minScore: score - 20,
+              maxScore: score + 20,
+            }
+          }).then(res2 => {
+            this.detail = res2.data.records
+            this.randomSortArray(this.detail)
+
+            if (this.collectionList !== "") {
+              for (let i = 0; i < this.detail.length; i++) {
+                for (let j = 0; i < this.collectionList.length; i++) {
+                  if (this.detail[i].specialty.includes(this.collectionList[j].specialty)) {
+                    this.detail[i].specialty = this.collectionList[j].specialty
+                  }
+                }
+              }
+            }
+          })
+        })
+      }
+      else {
+        this.request.get("/school").then(res => {
+          this.detail = res.data
+          this.randomSortArray(this.detail)
+          // console.log(this.detail)
+        })
+      }
     },
     randomSortArray(arr) {
       const len = arr.length;
@@ -136,6 +184,21 @@ export default {
     },
     jumpTo(url) {
       window.open(url, "_blank")
+    },
+    // 跳转详细界面
+    details(row) {
+      // alert(JSON.stringify(row))
+      console.log(row)
+      this.$router.push({
+        path: "/front/details",
+        query: {
+          detailName: row.name,
+          detailAvatar: row.avatar,
+        }
+      })
+    },
+    cutName(name) {
+      return name.split("、")
     },
   },
   mounted() {

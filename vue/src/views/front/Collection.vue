@@ -4,8 +4,9 @@
       <el-form label-width="80px" class="ms-content" hide-required-asterisk>
         <div style="display: flex">
           <div class="search-box">
-            <el-form-item label="院校查询" style="display: inline-block; margin-left: 25px">
+            <el-form-item label="收藏查询" style="display: inline-block; margin-left: 25px">
               <el-input style="width: 200px; margin-left: 40px" suffix-icon="el-icon-search" placeholder="请输入学校名称" v-model="name" ></el-input>
+              <el-input style="width: 200px; margin-left: 10px" suffix-icon="el-icon-search" placeholder="请输入专业名称" v-model="specialty" ></el-input>
               <el-button class="ml-5" type="primary" @click="load">搜索</el-button>
               <el-button class="ml-5" type="goon" @click="reset">重置</el-button>
             </el-form-item>
@@ -64,6 +65,7 @@ export default {
       pageSize: 10,
       collectionList: localStorage.getItem("collection") ? JSON.parse(localStorage.getItem("collection")) : [],
       name: "",
+      specialty: "",
       form: {},
     }
   },
@@ -80,15 +82,15 @@ export default {
       }
       this.collectionList = JSON.parse(localStorage.getItem("collection"))
       for (let i = 0; i < this.collectionList.length; i++) {
-        if (this.name === "") {
+        if ((this.name === "") && (this.specialty === "")) {
           this.$message({
             duration: 800,
-            message: "院校名称输入为空!",
+            message: "名称输入为空!",
             type: "error"
           })
           return
         }
-        else if (this.collectionList[i].name.includes(this.name)) {
+        else if (((this.collectionList[i].name.includes(this.name)) && this.name !== "") || (this.collectionList[i].specialty.includes(this.specialty) && this.specialty !== "")) {
           temp.push(this.collectionList[i])
         }
       }
@@ -110,6 +112,7 @@ export default {
       else {
         this.collectionList = JSON.parse(localStorage.getItem("collection"))
         this.name = ""
+        this.specialty = ""
       }
     },
     // 存取分页大小
