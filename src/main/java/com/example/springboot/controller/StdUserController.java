@@ -65,9 +65,13 @@ public class StdUserController {
     // 分页查询
     @GetMapping("/page")
     public Result findPage(@RequestParam Integer pageNum,
-                           @RequestParam Integer pageSize) {
+                           @RequestParam Integer pageSize,
+                           @RequestParam(defaultValue = "") String username,
+                           @RequestParam(defaultValue = "") String nickname) {
         QueryWrapper<StdUser> queryWrapper = new QueryWrapper<>();
         // queryWrapper.like(username != null, "username", username);
+        queryWrapper.like(username != null, "username", username);
+        queryWrapper.like(nickname != null, "nickname", nickname);
         // 逆序
         queryWrapper.orderByDesc("id");
         return Result.success(stdUserService.page(new Page<>(pageNum, pageSize), queryWrapper));

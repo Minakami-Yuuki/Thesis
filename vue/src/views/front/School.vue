@@ -18,9 +18,9 @@
             <el-radio-button label="其它" />
           </el-radio-group>
         </div>
-        <el-radio-group v-if="specialtyName" style="margin-left: 155px" size="large">
-          <el-radio-button > 专业： {{specialtyName}} </el-radio-button>
-        </el-radio-group>
+        <div class="search-box">
+          <el-button style="margin-left: 146px" size="medium" class="ml-5" type="primary" @click="goBack"> 专业： {{specialtyName}} </el-button>
+        </div>
         <el-form-item label="分数区间" style="display: inline-block; margin-left: 37px">
           <div style="margin-left: 50px; max-width: 300px">
             <el-slider
@@ -380,6 +380,14 @@ export default {
         else {
           this.tableData[i].classFlag = '普通本科'
         }
+      }
+    },
+    goBack() {
+      if (window.history.length <= 1) {
+        this.$router.push({path:'/'})
+        return false
+      } else {
+        this.$router.go(-1)
       }
     }
   }

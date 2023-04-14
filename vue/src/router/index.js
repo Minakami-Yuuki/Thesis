@@ -25,6 +25,7 @@ const routes = [
       { path: 'schoolScore', name: 'Score', component: () => import("../views/Score.vue") },
       { path: 'schoolDescription', name: 'SchoolDescription', component: () => import("../views/SchoolDescription.vue") },
       { path: 'specialty', name: 'Specialty', component: () => import("../views/Specialty.vue") },
+      { path: 'collection', name: 'Collection', component: () => import("../views/Collection.vue") },
       { path: 'application', name: 'Application', component: () => import("../views/Application.vue") },
       { path: 'personinfo', name: 'PersonInfo', component: () => import("../views/PersonInfo.vue") },
       { path: 'changePSW', name: 'ChangePassword', component: () => import("../views/ChangePassword.vue")},

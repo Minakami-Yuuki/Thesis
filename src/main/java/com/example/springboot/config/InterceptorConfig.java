@@ -37,6 +37,7 @@ public class InterceptorConfig implements  WebMvcConfigurer {
                                      "/file/**",
                                      "/front/**",
                                      "/school/**",
-                                     "/specialty/**");
+                                     "/specialty/**",
+                                     "/collection/**");
     }
 }

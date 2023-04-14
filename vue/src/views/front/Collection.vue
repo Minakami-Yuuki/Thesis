@@ -1,7 +1,7 @@
 <template>
   <div class="school-wrap">
     <div class="form-box">
-      <el-form label-width="80px" class="ms-content" hide-required-asterisk>
+      <el-form label-width="80px" class="ms-content" hide-required-asterisk :model="form" ref="rulesForm">
         <div style="display: flex">
           <div class="search-box">
             <el-form-item label="收藏查询" style="display: inline-block; margin-left: 25px">
@@ -9,6 +9,7 @@
               <el-input style="width: 200px; margin-left: 10px" suffix-icon="el-icon-search" placeholder="请输入专业名称" v-model="specialty" ></el-input>
               <el-button class="ml-5" type="primary" @click="load">搜索</el-button>
               <el-button class="ml-5" type="goon" @click="reset">重置</el-button>
+              <el-button class="ml-5" type="warning" @click="collection">保存收藏</el-button>
             </el-form-item>
           </div>
         </div>
@@ -63,6 +64,7 @@ export default {
       tableData: [],
       pageNum: 1,
       pageSize: 10,
+      username: localStorage.getItem("stdUser") ? JSON.parse(localStorage.getItem("stdUser")) : JSON.parse(localStorage.getItem("user")),
       collectionList: localStorage.getItem("collection") ? JSON.parse(localStorage.getItem("collection")) : [],
       name: "",
       specialty: "",
@@ -145,6 +147,80 @@ export default {
         message: "移除成功!",
         type: "success"
       })
+    },
+    // 收藏操作 (先删除后添加)
+    collection() {
+      if (localStorage.getItem("stdUser") || localStorage.getItem("user")) {
+        let once = 1
+        this.request.get("/collection/searchByName", {
+          params: {
+            name: this.username.username
+          }
+        }).then(res => {
+          // console.log(res)
+          if(res.code !== '500') {
+            this.request.delete("/collection/deleteByName/" + this.username.username)
+          }
+          for (let i = 0; i < this.collectionList.length; i++) {
+            this.form.name = this.username.username
+            this.form.school = this.collectionList[i].name
+            this.form.classFlag = this.collectionList[i].classFlag
+            this.form.specialty = this.collectionList[i].specialty
+            this.form.minScore = this.collectionList[i].minScore
+            this.form.minRank = this.collectionList[i].minRank
+
+            this.$refs['rulesForm'].validate((valid) => {
+              if (valid) {
+                // 表单验证合法
+                // 获取后端数据判断跳转
+                if(this.collectionList === undefined) {
+                  this.$message({
+                    duration: 1200,
+                    message: "请填写分数!",
+                    type: "error"
+                  })
+                  return
+                }
+                this.request.post("/collection", this.form).then(res2 => {
+                  if (once === 1) {
+                    if (res2.code === '200') {
+                      // 将表单值传入后端
+                      this.$message({
+                        duration: 800,
+                        message: "保存成功!",
+                        type: "success"
+                      })
+                    }
+                    else {
+                      this.$message({
+                        duration: 1200,
+                        message: "保存失败!",
+                        type: "error"
+                      })
+                    }
+                    once++
+                  }
+                })
+              }
+              else {
+                // 将表单值传入后端 (空表单)
+                this.$message({
+                  duration: 800,
+                  message: "保存成功!",
+                  type: "success"
+                })
+              }
+            })
+          }
+        })
+      }
+      else {
+        this.$message({
+          duration: 1200,
+          message: "请进行用户登录!",
+          type: "error"
+        })
+      }
     }
   }
 }

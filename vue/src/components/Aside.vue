@@ -37,6 +37,7 @@
       <span slot="title"/>
       <el-menu-item index="/Student" class="el-icon-user-solid"> 用户信息管理 </el-menu-item>
       <el-menu-item index="/Application" class="el-icon-medal"> 用户志愿管理 </el-menu-item>
+      <el-menu-item index="/Collection" class="el-icon-folder-add"> 用户收藏管理 </el-menu-item>
     </el-submenu>
 
     <el-submenu index="3">
