@@ -9,7 +9,7 @@ import com.baomidou.mybatisplus.extension.service.IService;
  * </p>
  *
  * @author Misaki
- * @since 2023-04-14
+ * @since 2023-04-15
  */
 public interface IStdCollectionService extends IService<StdCollection> {
 

@@ -19,7 +19,7 @@
     <el-card class="el-card-define">
       <el-table :data="collectionList" @selection-change="handleSelectionChange">
         <el-table-column type="selection" width="55"></el-table-column>
-        <el-table-column prop="avatar" label="学校图标">
+        <el-table-column label="学校图标">
           <template slot-scope="scope">
             <img :src="scope.row.avatar" class="avatarSchool">
           </template>
@@ -64,12 +64,15 @@ export default {
       tableData: [],
       pageNum: 1,
       pageSize: 10,
-      username: localStorage.getItem("stdUser") ? JSON.parse(localStorage.getItem("stdUser")) : JSON.parse(localStorage.getItem("user")),
+      user: localStorage.getItem("stdUser") ? JSON.parse(localStorage.getItem("stdUser")) : JSON.parse(localStorage.getItem("user")),
       collectionList: localStorage.getItem("collection") ? JSON.parse(localStorage.getItem("collection")) : [],
       name: "",
       specialty: "",
       form: {},
     }
+  },
+  created() {
+    this.init()
   },
   methods: {
     load() {
@@ -148,26 +151,46 @@ export default {
         type: "success"
       })
     },
+    // 初始化
+    async init() {
+      this.request.get("/collection/pageName", {
+        params: {
+          pageNum: this.pageNum,
+          pageSize: this.pageSize,
+          name: this.user.username,
+        }
+      }).then(async res => {
+        console.log(res)
+        if ((res.data.records.length !== 0) && (!localStorage.getItem("collection"))) {
+          this.collectionList = res.data.records
+          localStorage.setItem("collection", JSON.stringify(this.collectionList))
+        }
+      })
+    },
     // 收藏操作 (先删除后添加)
     collection() {
       if (localStorage.getItem("stdUser") || localStorage.getItem("user")) {
         let once = 1
         this.request.get("/collection/searchByName", {
           params: {
-            name: this.username.username
+            username: this.user.username
           }
         }).then(res => {
           // console.log(res)
           if(res.code !== '500') {
-            this.request.delete("/collection/deleteByName/" + this.username.username)
+            this.request.delete("/collection/deleteByName/" + this.user.username)
           }
           for (let i = 0; i < this.collectionList.length; i++) {
-            this.form.name = this.username.username
-            this.form.school = this.collectionList[i].name
+            this.form.username = this.user.username
+            this.form.avatarUser = this.user.avatar
+            this.form.name = this.collectionList[i].name
+            this.form.province = this.collectionList[i].province
+            this.form.area = this.collectionList[i].area
             this.form.classFlag = this.collectionList[i].classFlag
             this.form.specialty = this.collectionList[i].specialty
             this.form.minScore = this.collectionList[i].minScore
             this.form.minRank = this.collectionList[i].minRank
+            this.form.avatar = this.collectionList[i].avatar
 
             this.$refs['rulesForm'].validate((valid) => {
               if (valid) {

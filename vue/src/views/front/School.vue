@@ -19,7 +19,7 @@
           </el-radio-group>
         </div>
         <div class="search-box">
-          <el-button style="margin-left: 146px" size="medium" class="ml-5" type="primary" @click="goBack"> 专业： {{specialtyName}} </el-button>
+          <el-button v-if="specialtyName" style="margin-left: 146px" size="medium" class="ml-5" type="primary" @click="goBack"> 专业： {{specialtyName}} </el-button>
         </div>
         <el-form-item label="分数区间" style="display: inline-block; margin-left: 37px">
           <div style="margin-left: 50px; max-width: 300px">
@@ -131,9 +131,8 @@ export default {
   },
   created() {
     // 刷新页面
-    let detailFrom = this.$route.query
-    // console.log(detailFrom.specialtyName)
-    if (detailFrom.specialtyName === undefined) {
+    console.log(this.specialtyName)
+    if (this.specialtyName === undefined) {
       if ((this.form.province === "全部") && (this.form.schoolClass === "全部")) {
         this.load()
       }
@@ -187,7 +186,7 @@ export default {
       console.log(pageSize)
       this.pageSize = pageSize
       this.button = 0
-      if ((this.form.province === '全部') && (this.form.schoolClass === '全部')) {
+      if (((this.form.province === '全部') && (this.form.schoolClass === '全部')) && (this.specialtyName === undefined)) {
         this.load()
       }
       else {
@@ -199,7 +198,7 @@ export default {
       console.log(pageNum)
       this.pageNum = pageNum
       this.button = 0
-      if ((this.form.province === '全部') && (this.form.schoolClass === '全部')) {
+      if ((this.form.province === '全部') && (this.form.schoolClass === '全部') && (this.specialtyName === undefined)) {
         this.load()
       }
       else {
@@ -214,10 +213,9 @@ export default {
     // 查询院校地区
     handleSearch(val) {
       let temp = []
-      let detailFrom = this.$route.query
 
       // 具体专业查询
-      if (detailFrom.specialtyName !== undefined) {
+      if (this.specialtyName !== undefined) {
         let tempAll = JSON.parse(localStorage.getItem("tempAll"))
 
         if (this.form.province === "全部" && this.classMap[this.form.schoolClass] === "") {
@@ -289,12 +287,11 @@ export default {
     },
     // 总体专业查询
     handleSpecialty() {
-      let detailFrom = this.$route.query
       this.request.get("/school/pageSpecialty", {
         params: {
           pageNum: this.pageNum,
           pageSize: this.pageSize,
-          specialty: detailFrom.specialtyName,
+          specialty: this.specialtyName,
         }
       }).then(res => {
         console.log(res.data)
@@ -307,7 +304,7 @@ export default {
               params: {
                 pageNum: 1,
                 pageSize: this.total,
-                specialty: detailFrom.specialtyName
+                specialty: this.specialtyName
               }
             }).then(res2 => {
               console.log(res2)

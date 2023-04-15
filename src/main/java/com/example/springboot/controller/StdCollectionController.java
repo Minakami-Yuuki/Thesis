@@ -2,7 +2,6 @@ package com.example.springboot.controller;
 
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
-import com.example.springboot.entity.StdApplication;
 import org.springframework.web.bind.annotation.*;
 import javax.annotation.Resource;
 import java.util.List;
@@ -20,7 +19,7 @@ import com.example.springboot.entity.StdCollection;
  * </p>
  *
  * @author Misaki
- * @since 2023-04-14
+ * @since 2023-04-15
  */
 @RestController
 @RequestMapping("/collection")
@@ -42,10 +41,10 @@ public class StdCollectionController {
     }
 
     // 删除 (根据名称)
-    @DeleteMapping("/deleteByName/{name}")
-    public Result deleteByName(@PathVariable String name) {
+    @DeleteMapping("/deleteByName/{username}")
+    public Result deleteByName(@PathVariable String username) {
         QueryWrapper<StdCollection> queryWrapper = new QueryWrapper<>();
-        queryWrapper.eq(name != null, "name", name);
+        queryWrapper.eq(username != null, "username", username);
         return Result.success(stdCollectionService.remove(queryWrapper));
     }
 
@@ -69,9 +68,9 @@ public class StdCollectionController {
 
     // 查询单个 (根据名称)
     @GetMapping("/searchByName")
-    public Result findByName(@RequestParam String name) {
+    public Result findByName(@RequestParam String username) {
         long count = stdCollectionService.count(new QueryWrapper<StdCollection>()
-                .eq("name", name));
+                .eq("username", username));
         if (count <= 0) {
             return Result.error();
         }
@@ -81,16 +80,15 @@ public class StdCollectionController {
     }
 
     // 分页查询
-    @GetMapping("/page")
+    @GetMapping("/pageName")
     public Result findPage(@RequestParam Integer pageNum,
                            @RequestParam Integer pageSize,
-                           @RequestParam(defaultValue = "") String name) {
+                           @RequestParam(defaultValue = "") String username) {
         QueryWrapper<StdCollection> queryWrapper = new QueryWrapper<>();
-        queryWrapper.like(name != null, "name", name);
+        queryWrapper.like(username != null, "username", username);
         // queryWrapper.like(username != null, "username", username);
         // 逆序
         queryWrapper.orderByDesc("id");
         return Result.success(stdCollectionService.page(new Page<>(pageNum, pageSize), queryWrapper));
     }
 }
-

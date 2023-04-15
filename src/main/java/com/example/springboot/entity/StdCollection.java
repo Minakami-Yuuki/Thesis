@@ -15,7 +15,7 @@ import lombok.Setter;
  * </p>
  *
  * @author Misaki
- * @since 2023-04-14
+ * @since 2023-04-15
  */
 @Getter
 @Setter
@@ -30,10 +30,10 @@ public class StdCollection implements Serializable {
       private Integer id;
 
       @ApiModelProperty("用户名称")
-      private String name;
+        private String username;
 
       @ApiModelProperty("院校名称")
-      private String school;
+      private String name;
 
       @ApiModelProperty("院校层级")
       private Integer classFlag;
@@ -46,6 +46,18 @@ public class StdCollection implements Serializable {
 
       @ApiModelProperty("最低排名")
       private Integer minRank;
+
+      @ApiModelProperty("用户头像")
+      private String avatarUser;
+
+      @ApiModelProperty("院校头像")
+      private String avatar;
+
+      @ApiModelProperty("院校省份")
+      private String province;
+
+      @ApiModelProperty("院校地区")
+      private String area;
 
 
 }

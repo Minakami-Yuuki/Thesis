@@ -175,6 +175,7 @@ export default {
     reset() {
       this.name = ""
       this.button = 0
+      this.form.category = '全部'
       this.load()
     },
     category(val) {

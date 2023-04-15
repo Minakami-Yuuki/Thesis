@@ -9,7 +9,7 @@ import com.baomidou.mybatisplus.core.mapper.BaseMapper;
  * </p>
  *
  * @author Misaki
- * @since 2023-04-14
+ * @since 2023-04-15
  */
 public interface StdCollectionMapper extends BaseMapper<StdCollection> {
 
