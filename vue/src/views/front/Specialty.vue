@@ -159,7 +159,7 @@ export default {
         // }
         this.tableData = res.data.records
         this.total = res.data.total
-        console.log(this.total)
+        // console.log(this.total)
         this.form.category = '全部'
         if (this.name === "" && this.button === 1) {
           this.$message({

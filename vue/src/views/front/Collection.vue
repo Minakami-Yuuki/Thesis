@@ -68,7 +68,18 @@ export default {
       collectionList: localStorage.getItem("collection") ? JSON.parse(localStorage.getItem("collection")) : [],
       name: "",
       specialty: "",
-      form: {},
+      form: {
+        username: "",
+        avatarUser: "",
+        name: "",
+        province: "",
+        area: "",
+        classFlag: "",
+        specialty: "",
+        minScore: "",
+        minRank: "",
+        avatar: "",
+      },
     }
   },
   created() {
@@ -153,19 +164,22 @@ export default {
     },
     // 初始化
     async init() {
-      this.request.get("/collection/pageName", {
-        params: {
-          pageNum: this.pageNum,
-          pageSize: this.pageSize,
-          name: this.user.username,
-        }
-      }).then(async res => {
-        console.log(res)
-        if ((res.data.records.length !== 0) && (!localStorage.getItem("collection"))) {
-          this.collectionList = res.data.records
-          localStorage.setItem("collection", JSON.stringify(this.collectionList))
-        }
-      })
+      if (localStorage.getItem("stuUser") || localStorage.getItem("user")) {
+        this.request.get("/collection/pageName", {
+          params: {
+            pageNum: this.pageNum,
+            pageSize: this.pageSize,
+            username: this.user.username,
+          }
+        }).then(async res => {
+          console.log(res)
+          if ((res.data.records.length !== 0) && (!localStorage.getItem("collection"))) {
+            this.collectionList = res.data.records
+            this.switchClassFlag()
+            localStorage.setItem("collection", JSON.stringify(this.collectionList))
+          }
+        })
+      }
     },
     // 收藏操作 (先删除后添加)
     collection() {
@@ -176,13 +190,14 @@ export default {
             username: this.user.username
           }
         }).then(res => {
-          // console.log(res)
+          console.log(res.code)
           if(res.code !== '500') {
             this.request.delete("/collection/deleteByName/" + this.user.username)
           }
+          this.form.username = this.user.username
+          this.form.avatarUser = this.user.avatar
+          this.switchBackClassFlag()
           for (let i = 0; i < this.collectionList.length; i++) {
-            this.form.username = this.user.username
-            this.form.avatarUser = this.user.avatar
             this.form.name = this.collectionList[i].name
             this.form.province = this.collectionList[i].province
             this.form.area = this.collectionList[i].area
@@ -205,6 +220,7 @@ export default {
                   return
                 }
                 this.request.post("/collection", this.form).then(res2 => {
+                  console.log(this.form)
                   if (once === 1) {
                     if (res2.code === '200') {
                       // 将表单值传入后端
@@ -228,13 +244,14 @@ export default {
               else {
                 // 将表单值传入后端 (空表单)
                 this.$message({
-                  duration: 800,
-                  message: "保存成功!",
-                  type: "success"
+                  duration: 1200,
+                  message: "保存失败!",
+                  type: "error"
                 })
               }
             })
           }
+          this.switchClassFlag()
         })
       }
       else {
@@ -244,7 +261,39 @@ export default {
           type: "error"
         })
       }
-    }
+    },
+    switchClassFlag() {
+      for (let i = 0; i < this.collectionList.length; i++) {
+        if (this.collectionList[i].classFlag === 3 || this.collectionList[i].classFlag === 985) {
+          this.collectionList[i].classFlag = 985
+        }
+        else if (this.collectionList[i].classFlag === 2 || this.collectionList[i].classFlag === 211) {
+          this.collectionList[i].classFlag = 211
+        }
+        else if (this.collectionList[i].classFlag === 1 || this.collectionList[i].classFlag === '双一流') {
+          this.collectionList[i].classFlag = '双一流'
+        }
+        else {
+          this.collectionList[i].classFlag = '普通本科'
+        }
+      }
+    },
+    switchBackClassFlag() {
+      for (let i = 0; i < this.collectionList.length; i++) {
+        if (this.collectionList[i].classFlag === 985) {
+          this.collectionList[i].classFlag = 3
+        }
+        else if (this.collectionList[i].classFlag === 211) {
+          this.collectionList[i].classFlag = 2
+        }
+        else if (this.collectionList[i].classFlag === '双一流') {
+          this.collectionList[i].classFlag = 1
+        }
+        else {
+          this.collectionList[i].classFlag = 0
+        }
+      }
+    },
   }
 }
 </script>

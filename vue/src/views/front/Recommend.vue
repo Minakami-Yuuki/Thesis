@@ -104,43 +104,45 @@ export default {
   methods: {
     // 初始化
     async init() {
-      this.request.get("/application/pageName", {
-        params: {
-          pageNum: this.pageNum,
-          pageSize: this.pageSize,
-          name: JSON.parse(localStorage.getItem("stdUser")) ? JSON.parse(localStorage.getItem("stdUser")).username : JSON.parse(localStorage.getItem("user")).username,
-        }
-      }).then(async res => {
-        // console.log(res)
-        this.form.score = res.data.records[0].score
-        let a = []
-        a[0] = res.data.records[0].application1
-        a[1] = res.data.records[0].application2
-        a[2] = res.data.records[0].application3
-        a[3] = res.data.records[0].application4
-        a[4] = res.data.records[0].application5
-
-        const localTemp = []
-        for (let i = 0; i < a.length; i++) {
-          if (a[i] === null) {
-            break
+      if (localStorage.getItem("stdUser") || localStorage.getItem("user")) {
+        this.request.get("/application/pageName", {
+          params: {
+            pageNum: this.pageNum,
+            pageSize: this.pageSize,
+            name: localStorage.getItem("stdUser") ? JSON.parse(localStorage.getItem("stdUser")).username : JSON.parse(localStorage.getItem("user")).username,
           }
-          await this.request.get("/school/pageName", {
-            params: {
-              pageNum: this.pageNum,
-              pageSize: this.pageSize,
-              name: a[i],
+        }).then(async res => {
+          // console.log(res)
+          this.form.score = res.data.records[0].score
+          let a = []
+          a[0] = res.data.records[0].application1
+          a[1] = res.data.records[0].application2
+          a[2] = res.data.records[0].application3
+          a[3] = res.data.records[0].application4
+          a[4] = res.data.records[0].application5
+
+          const localTemp = []
+          for (let i = 0; i < a.length; i++) {
+            if (a[i] === null) {
+              break
             }
-          }).then(res2 => {
-            // console.log(res2)
-            localTemp.push(res2.data.records[0])
-          })
-        }
-        if (localStorage.getItem("application")) {
-        } else {
-          localStorage.setItem("application", JSON.stringify(localTemp))
-        }
-      })
+            await this.request.get("/school/pageName", {
+              params: {
+                pageNum: this.pageNum,
+                pageSize: this.pageSize,
+                name: a[i],
+              }
+            }).then(res2 => {
+              // console.log(res2)
+              localTemp.push(res2.data.records[0])
+            })
+          }
+          if (localStorage.getItem("application")) {
+          } else {
+            localStorage.setItem("application", JSON.stringify(localTemp))
+          }
+        })
+      }
     },
     // 重置搜索
     reset() {

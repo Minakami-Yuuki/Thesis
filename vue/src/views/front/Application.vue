@@ -140,7 +140,7 @@ export default {
         //   this.$router.push("/login")
         //   return false
         // }
-        console.log(res.data)
+        // console.log(res.data)
         this.tableData = res.data.records
         this.total = res.data.total
         this.form.province = "全部"

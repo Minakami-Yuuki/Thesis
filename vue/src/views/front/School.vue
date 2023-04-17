@@ -131,7 +131,7 @@ export default {
   },
   created() {
     // 刷新页面
-    console.log(this.specialtyName)
+    // console.log(this.specialtyName)
     if (this.specialtyName === undefined) {
       if ((this.form.province === "全部") && (this.form.schoolClass === "全部")) {
         this.load()
@@ -158,7 +158,7 @@ export default {
         //   this.$router.push("/login")
         //   return false
         // }
-        console.log(res.data)
+        // console.log(res.data)
         this.tableData = res.data.records
         this.total = res.data.total
         this.switchClassFlag()
@@ -253,7 +253,7 @@ export default {
 
           // 每页显示10个
           this.tableData = temp.slice(10 * (this.pageNum - 1), 10 * this.pageNum)
-          console.log(this.tableData)
+          // console.log(this.tableData)
           this.total = temp.length
           this.switchClassFlag()
         }
@@ -277,7 +277,7 @@ export default {
             return
           }
 
-          console.log(val)
+          // console.log(val)
           this.name = ""
           this.tableData = res.data.records
           this.total = res.data.total
@@ -294,7 +294,7 @@ export default {
           specialty: this.specialtyName,
         }
       }).then(res => {
-        console.log(res.data)
+        // console.log(res.data)
         this.tableData = res.data.records
         this.total = res.data.total
         this.switchClassFlag()
@@ -307,7 +307,7 @@ export default {
                 specialty: this.specialtyName
               }
             }).then(res2 => {
-              console.log(res2)
+              // console.log(res2)
               localStorage.setItem("tempAll", JSON.stringify(res2.data.records))
             })
       })
