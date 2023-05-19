@@ -91,4 +91,17 @@ public class StdCollectionController {
         queryWrapper.orderByDesc("id");
         return Result.success(stdCollectionService.page(new Page<>(pageNum, pageSize), queryWrapper));
     }
+
+    // 专业查询
+    @GetMapping("/findSpecialty")
+    public Result findSpecialty(@RequestParam Integer pageNum,
+                                @RequestParam Integer pageSize,
+                                @RequestParam(defaultValue = "") String specialty) {
+        QueryWrapper<StdCollection> queryWrapper = new QueryWrapper<>();
+        queryWrapper.like(specialty != null, "specialty", specialty);
+        // queryWrapper.like(username != null, "username", username);
+        // 逆序
+        queryWrapper.orderByDesc("id");
+        return Result.success(stdCollectionService.page(new Page<>(pageNum, pageSize), queryWrapper));
+    }
 }

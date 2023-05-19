@@ -164,7 +164,7 @@ export default {
     },
     // 初始化
     async init() {
-      if (localStorage.getItem("stuUser") || localStorage.getItem("user")) {
+      if (localStorage.getItem("stdUser") || localStorage.getItem("user")) {
         this.request.get("/collection/pageName", {
           params: {
             pageNum: this.pageNum,

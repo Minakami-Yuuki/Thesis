@@ -20,7 +20,7 @@
             <i class="el-icon-refresh-right"/></el-button>
         </div>
         <el-row :gutter="20"  class="el-row" type="flex" >
-          <el-col :span="8" v-for = "item in this.detail.slice(0, 6)" class="el-col" >
+          <el-col :span="8" v-for = "item in this.list.slice(0,6)" class="el-col" >
             <el-card class="el-card">
               <div slot="header" class="clearfix">
                 <span style="font-size: 20px; font-weight: bold">{{item.name}}</span>
@@ -115,6 +115,7 @@ export default {
     return {
       banH: 300,
       detail: [],
+      list: [],
       name: "",
       collectionList: JSON.parse(localStorage.getItem("collection")) ? JSON.parse(localStorage.getItem("collection")) : "",
       imgList: [
@@ -131,44 +132,53 @@ export default {
       this.banH = 660 // 轮播图高度
     },
     load() {
-      if (JSON.parse(localStorage.getItem("stdUser")) || JSON.parse(localStorage.getItem("user"))) {
-        this.request.get("/application/pageName", {
-          params: {
-            pageNum: 1,
-            pageSize: 1,
-            name: JSON.parse(localStorage.getItem("stdUser")) ? JSON.parse(localStorage.getItem("stdUser")).username : JSON.parse(localStorage.getItem("user")).username
+      if (this.collectionList) {
+        this.request.get("/collection").then(res => {
+          this.detail = res.data
+          this.randomSortArray(this.list)
+          for (let i = 0; i < this.detail.length; i++) {
+            this.request.get("/school/pageName", {
+              params: {
+                pageNum: 1,
+                pageSize: 101,
+                name: this.detail[i].name
+              }
+            }).then(res2 => {
+              this.$set(this.detail[i], 'link', res2.data.records[0].link);
+            })
           }
-        }).then(res => {
-          // console.log(res.data.records[0].score)
-          let score = res.data.records[0].score
-          this.request.get("/school/pageSchool", {
-            params: {
-              pageNum: 1,
-              pageSize: 100,
-              minScore: score - 20,
-              maxScore: score + 20,
-            }
-          }).then(res2 => {
-            this.detail = res2.data.records
-            this.randomSortArray(this.detail)
-
-            if (this.collectionList !== "") {
-              for (let i = 0; i < this.detail.length; i++) {
-                for (let j = 0; i < this.collectionList.length; i++) {
-                  if (this.detail[i].specialty.includes(this.collectionList[j].specialty)) {
-                    this.detail[i].specialty = this.collectionList[j].specialty
-                  }
+          for (let j = 0; j < this.collectionList.length; j++) {
+              for (let z = 0; z < this.detail.length; z++) {
+                if (this.collectionList[j].specialty === this.detail[z].specialty) {
+                  this.list.push(this.detail[z])
                 }
               }
             }
-          })
+          // 去重
+          for(let i = 0;i < this.list.length; i++) {
+            for (let j = i + 1; j < this.list.length; j++) {
+              if ((this.list[i].name === this.list[j].name) && (this.list[i].specialty === this.list[j].specialty)) {
+                this.list.splice(j, 1);
+                j--;
+              }
+            }
+          }
+          console.log(this.list)
+          for(let i = 0;i < this.list.length; i++) {
+            for (let j = i + 1; j < this.list.length; j++) {
+              if (this.list[i].username === this.list[j].username) {
+                this.list.splice(j, 1);
+                j--;
+              }
+            }
+          }
+          console.log(this.list)
         })
       }
       else {
         this.request.get("/school").then(res => {
-          this.detail = res.data
-          this.randomSortArray(this.detail)
-          // console.log(this.detail)
+          this.list = res.data
+          this.randomSortArray(this.list)
         })
       }
     },

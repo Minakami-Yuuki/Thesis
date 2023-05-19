@@ -53,8 +53,8 @@ const routes = [
       { path: 'school', name: 'FrontSchool', component: () => import("../views/front/School.vue") },
       { path: 'speciality', name: 'Speciality', component: () => import("../views/front/Specialty.vue") },
       { path: 'details', name: 'Details', component: () => import("../views/front/Details.vue") },
-      { path: 'collection', name: 'Collection', component: () => import("../views/front/Collection.vue") },
-      { path: 'application', name: 'Application', component: () => import("../views/front/Application.vue") },
+      { path: 'collection', name: 'FrontCollection', component: () => import("../views/front/Collection.vue") },
+      { path: 'application', name: 'FrontApplication', component: () => import("../views/front/Application.vue") },
       { path: 'recommend', name: 'Recommend', component: () => import("../views/front/Recommend.vue") },
       { path: 'report', name: 'Report', component: () => import("../views/front/Report.vue") },
     ]

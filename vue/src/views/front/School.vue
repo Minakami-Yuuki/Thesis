@@ -213,9 +213,8 @@ export default {
     // 查询院校地区
     handleSearch(val) {
       let temp = []
-
       // 具体专业查询
-      if (this.specialtyName !== undefined) {
+      if (this.specialtyName) {
         let tempAll = JSON.parse(localStorage.getItem("tempAll"))
 
         if (this.form.province === "全部" && this.classMap[this.form.schoolClass] === "") {

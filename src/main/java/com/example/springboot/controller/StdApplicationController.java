@@ -128,7 +128,7 @@ public class StdApplicationController {
             userID.put(userName, i);
             idUser.put(i, userName);
 
-            // 建立 用户 -- 物品 倒排表
+            // 建立 用户 -- 志愿 倒排表
             for (int j = 0; j < length - 1; j++) {
                 if (items.contains(user_item[j])) {
                     // 从第一个往后直接添加
@@ -145,7 +145,7 @@ public class StdApplicationController {
 
         System.out.println("\n" + itemUserCollection.toString());
 
-        // 稀疏矩阵 (相似度矩阵计算)
+        // 相同志愿处自动加 1
         Set<Entry<String, Set<String>>> entrySet = itemUserCollection.entrySet();
         Iterator<Entry<String, Set<String>>> iterator = entrySet.iterator();
         while (iterator.hasNext()) {
@@ -162,7 +162,7 @@ public class StdApplicationController {
         }
         System.out.println("\n" + userItemLength.toString());
 
-        // 余弦相似度
+        // 计算当前用户的用户相似度
         String recommendUser = listAll.get(0).getName();
         int recommendUserId = userID.get(recommendUser);
         System.out.println();
@@ -178,8 +178,7 @@ public class StdApplicationController {
             }
         }
 
-        // 计算当前用户的院校推荐度
-        // 遍历集合
+        // 计算当前志愿院校的用户相似度
         for(String item : items){
             // 当前院校集合
             Set<String> users = itemUserCollection.get(item);
@@ -187,13 +186,13 @@ public class StdApplicationController {
             if(!users.contains(recommendUser)){
                 double itemRecommendDegree = 0.0;
                 for(String user : users){
-                    // 进行物品和用户的相似度叠加 生成院校推荐度
+                    // 生成志愿推荐度
                     itemRecommendDegree +=
                             sparseMatrix[userID.get(recommendUser)][userID.get(user)] /
                                     Math.sqrt(userItemLength.get(recommendUser) * userItemLength.get(user));
                 }
                 list.put(item, itemRecommendDegree);
-//                System.out.println("The item "+item+" for "+recommendUser +"'s recommended degree:"+itemRecommendDegree);
+                System.out.println("The item "+item+" for "+recommendUser +"'s recommended degree:"+itemRecommendDegree);
             }
         }
 

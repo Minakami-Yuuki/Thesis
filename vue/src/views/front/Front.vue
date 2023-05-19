@@ -32,7 +32,7 @@
           </el-menu-item>
           <el-menu-item index="/front/recommend">
             <a @click="$router.push('/front/recommend')" target="_blank">
-              院校推荐</a>
+              志愿推荐</a>
           </el-menu-item>
           <el-menu-item index="/front/report">
             <a @click="$router.push('/front/report')" target="_blank">
@@ -40,7 +40,7 @@
           </el-menu-item>
           <el-menu-item index="/front/collection">
             <a @click="$router.push('/front/collection')" target="_blank">
-              院校收藏
+              志愿收藏
             </a>
           </el-menu-item>
           <el-menu-item index="/login">

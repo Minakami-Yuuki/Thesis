@@ -83,7 +83,7 @@ export default {
   },
   methods: {
     register() {
-      // 登录请求校验
+      // 请求校验
       this.$refs['userForm'].validate((valid) => {
         if (valid) {
           if(this.stdUser.password !== this.stdUser.confirmPassword) {
